@@ -1,0 +1,117 @@
+---
+title: "Tartószerkezetek méretezésének alapjai - 3. házi"
+params:
+  stud_neptun: PROBA1
+output:
+  html_document:
+    theme: readable
+#    css: include/style.css
+#    includes:
+#      after_body: include/after_body.html
+#      before_body: include/before_body.html
+#      in_header: include/in_header.html
+---
+
+<!--
+TODO:
+* 
+
+NOTES:
+* 
+-->
+
+***
+
+
+```{r, echo=FALSE}
+library(dplyr, warn.conflicts = F)
+source("R/get_compound_par.R")
+
+load(file = "data/input_data.RData")
+
+student_neptun   = params$stud_neptun ## WARNING!
+
+input_data       = filter(input_data, Neptun == student_neptun)
+
+compound         = get_compound_par(input_data)
+comp_input_names = compound$names
+comp_input_data  = compound$data
+
+```
+
+Neptun: `r params$stud_neptun`
+
+***
+
+### 9. Feladat
+
+Mekkora az előző feladatban adott sátrat felemelni akaró erő? Mekkora és milyen irányú a peremgyűrűt terhelő erő, mekkora belső erő keletkezik a függőlegesen alátámasztott peremgyűrűben? 
+
+```{r, echo=FALSE}
+R   = comp_input_data$p8__R
+varrho = comp_input_data$p8__varrho
+t = comp_input_data$p8__t
+f = comp_input_data$p8__f
+p = comp_input_data$p8__p
+
+F=p*R^2*pi/1000
+a=F*1000/(2*R*pi)
+alpha=asin(R/varrho)
+N=a/sin(alpha)
+p_p=N*cos(alpha)
+H_ny=R*p_p/1000
+
+```
+
+Kiindulási adatok:
+
+* $R =  `r R` \rm{m}$
+* $varrho  =  `r varrho` \rm{m}$
+* $t =  `r t` \rm{mm}$
+* $f =  `r f` \rm{N/mm^2}$
+* $p =  `r p` \rm{N/m^2}$
+
+A sátrat terhelő nyomás függőleges eredője a nyomás felületmenti integrálásával nyerhető. Ez megegyezik a nyomás és az alapterület szorzatával. 
+
+</td><td>
+<object type="image/svg+xml" data="image/3_hazi_9_feladat_1_abra_megoldas.png" 
+style="width:270px;height:152px">Your browser does not support SVG</object>
+</table></tr></td>
+
+Így az eredő, amely felemelni próbálja a sátrat:
+
+$$F=\frac { p\times { R }^{ 2 }\times \Pi  }{ 1000 }   = `r signif(F,4)` \rm{ kN }.\quad \rm{(0.1 pont)}$$
+
+
+A sátrat a teljes kerülete mentén kötjük le, a lekötő erő függőleges vetületének fajlagos értéke:
+
+$$a=\frac { F \times 1000}{ 2\times R\times \Pi  } =`r signif(a,3)`\rm{\frac { N } { mm }}.$$
+
+</td><td>
+<object type="image/svg+xml" data="image/3_hazi_9_feladat_2_abra_megoldas.png" 
+style="width:190px;height:138px">Your browser does not support SVG</object>
+</table></tr></td>
+
+A sátor érintőjének szöge a megtámasztásnál:
+
+$$\alpha =\sin ^{ -1 }{ \left( \frac { R }{ \varrho  }  \right)  }=`r signif(alpha,3)`\rm{°}.$$
+
+Az érintőirányú lekötő erő, amelynek ellentettje terheli a peremgyűrűt:
+
+$$N=\frac { a }{ \sin { \alpha  }  } =`r signif(N,3)`\rm{kN}.\quad \rm{(0.1 pont)} $$
+
+A peremgyűrűt terhelő erő vízszintes komponense, amelynek ellentéte terheli a peremgyűrűt:
+
+$$p_\rm{p}=N\times \cos { \alpha  }=`r signif(p_p,4)` \rm{\frac { N }{ m }}.\quad \rm{(0.1 pont)}$$
+
+A gyűrűben keletkező nyomóerő a kazánképletből:
+
+$$H_\rm{ny}= \frac { R\times p_\rm{p} }{ 1000 }  =`r signif(H_ny,3)`\rm{kN}.\quad \rm{(0.1 pont)} $$
+
+
+</td><td>
+<object type="image/svg+xml" data="image/3_hazi_9_feladat_3_abra_megoldas.png" 
+style="width:327px;height:155px">Your browser does not support SVG</object>
+</table></tr></td>
+
+

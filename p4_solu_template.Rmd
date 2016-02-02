@@ -1,0 +1,92 @@
+---
+title: "Tartószerkezetek méretezésének alapjai - 3. házi"
+params:
+  stud_neptun: PROBA1
+output:
+  html_document:
+    keep_md: yes
+    self_contained: no
+    theme: readable
+#    css: include/style.css
+#    includes:
+#      after_body: include/after_body.html
+#      before_body: include/before_body.html
+#      in_header: include/in_header.html
+---
+
+<!--
+TODO:
+* 
+
+NOTES:
+* 
+-->
+
+***
+
+```{r, echo=FALSE}
+library(dplyr, warn.conflicts = F)
+source("R/get_compound_par.R")
+
+load(file = "data/input_data.RData")
+
+student_neptun   = params$stud_neptun ## WARNING!
+
+input_data       = filter(input_data, Neptun == student_neptun)
+
+compound         = get_compound_par(input_data)
+comp_input_names = compound$names
+comp_input_data  = compound$data
+
+```
+
+Neptun: `r params$stud_neptun`
+
+***
+
+### 4. Feladat
+
+Az előző feladatban adott munkagödör határolásnál milyen vastagságú pallózat felel meg az $y$ m-re elhelyezett I gerendák között, ha a fa szilárdsága $18 N/mm^\rm{2}$ ? 
+
+
+***
+
+```{r, echo=FALSE}
+y = comp_input_data$p3__y
+p_2 = comp_input_data$p3__p_2
+
+M_ed=p_2*y^2/8
+f=18
+N=M_ed/z
+b=sqrt(6*M_ed*1000/f)
+
+```
+
+Kiindulási adatok:
+
+* $y =  `r y` \rm{m}$
+* $p_2 =  `r p_2` \rm{kN/mm^2}$
+
+
+A pallókat az I tartó mentén függőlegesen egymáson helyezik el, így a legnagyobb igénybevételt az alsó palló középső keresztmetszete kapja. A palló statikai váza egy $y$ m hosszú kéttámaszú tartó, amelyre $p_\rm{2}$ $kN/m^2$ egyenletesen megoszló teher hat a teljes hossz mentén. 
+
+A középső keresztmetszetben keletkező fajlagos nyomaték:
+
+$$M_\rm{ed}=\frac { p_\rm{2}\times { y }^{ 2 } }{ 8 }=`r signif(M_ed,4)` \rm{ kNm/m } \quad \rm{(0.1 pont)}$$
+
+
+A belső erők karja a gerenda vastagságának kétharmada: z = b*(2/3) , így a húzó- és a nyomóerő:
+
+$$N=\frac {M_\rm{ed}}{ z }$$
+
+A keresztmetszetben keletkező nyomófeszültség:
+
+$$\sigma=\frac { 6\times M_\rm{ed}}{ { b }^{ 2 }}$$
+
+Átrendezve az egyenletet, és a feszültség helyére a fa nyomószilárdságát helyettesítve megkapjuk a palló vastagságát:
+
+$$\sigma=f=`r signif(sigma,3)`\rm{\frac { N }{ { mm }^{ 2 }}}.$$
+
+$$b=\sqrt { \frac { 6\times M_\rm{ed}\times 1000 }{ f}  }= `r signif(b,4)` \rm{ mm }.\quad \rm{(0.1 pont)}$$
+
+

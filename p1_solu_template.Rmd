@@ -1,0 +1,212 @@
+---
+title: "Tartószerkezetek méretezésének alapjai - 3. házi"
+params:
+  stud_neptun: PROBA1
+output:
+  html_document:
+    keep_md: yes
+    self_contained: yes
+    theme: readable
+#    css: include/style.css
+#    includes:
+#      after_body: include/after_body.html
+#      before_body: include/before_body.html
+#      in_header: include/in_header.html
+---
+
+<!--
+TODO:
+* 
+
+NOTES:
+* 
+-->
+
+***
+
+```{r, echo=FALSE}
+library(dplyr, warn.conflicts = F)
+source("R/get_compound_par.R")
+
+load(file = "data/input_data.RData")
+
+student_neptun   = params$stud_neptun ## WARNING!
+
+input_data       = filter(input_data, Neptun == student_neptun)
+
+compound         = get_compound_par(input_data)
+comp_input_names = compound$names
+comp_input_data  = compound$data
+
+```
+
+Neptun: `r params$stud_neptun`
+
+***
+### 1. Feladat
+
+Egy $F$ súlyú testet acélrudak tartanak úgy, hogy a rudak két végét egymástól $2 l$  távolságra rögzítjük. A test a két rögzítési ponttól egyenlő távolságra van. Mekkora a rúderő, ha terheletlen állapotban a rúd hossza $L_\rm{0}$? Mekkora a test függőleges eltolódása a rudak összenyomódása miatt? A rúd keresztmetszeti területe $A$, rugalmassági modulusa pedig $E = 200 kN/mm^\rm{2}$. <BR>
+a.	Alkalmazza a kis elmozdulások elméletét! <BR>
+b.	Alkalmazza a nagy elmozdulások elméletét! (3 lépésben)
+
+<object type="image/svg+xml" data="image/3_hazi_1_feladat_1_abra_kiiras.png" 
+style="width:335px;height:185px">Your browser does not support SVG</object>
+
+***
+
+__a) Részfeladat__
+
+```{r, echo=FALSE}
+F = comp_input_data$p1_a_F
+l = comp_input_data$p1_a_l
+L_0 = comp_input_data$p1_a_L_0
+A = comp_input_data$p1_a_A
+E=200000
+
+f_0=sqrt(L_0^2-l^2)
+K_0=(L_0*F)/(2*f_0)
+sigma_0=K_0/A
+epsilon_0=sigma_0/E
+deltaL_0=L_0*epsilon_0
+f_1=sqrt((L_0-deltaL_0)^2-l^2)
+w_1=f_1-f_0
+
+
+L_1=L_0-deltaL_0
+K_1=(L_1*F)/(2*f_1)
+sigma_1=K_1/A
+epsilon_1=sigma_1/E
+deltaL_1=L_1*epsilon_1
+f_2=sqrt((L_1-deltaL_1)^2-l^2)
+w_2=f_2-f_1
+
+L_2=L_1-deltaL_1
+K_2=(L_2*F)/(2*f_2)
+sigma_2=K_2/A
+epsilon_2=sigma_2/E
+deltaL_2=L_2*epsilon_2
+f_3=sqrt((L_2-deltaL_2)^2-l^2)
+w_3=f_3-f_2
+
+L_3=L_2-deltaL_2
+K_3=(L_3*F)/(2*f_3)
+sigma_3=K_3/A
+epsilon_3=sigma_3/E
+deltaL_3=L_2*epsilon_3
+f_4=sqrt((L_3-deltaL_3)^2-l^2)
+w_4=f_4-f_3
+
+```
+
+Kiindulási adatok:
+
+* $F =  `r F` \rm{kN}$
+* $l =  `r l` \rm{m}$
+* $L_0 =  `r L_0` \rm{m}$
+* $A =  `r A` \rm{mm^2}$
+* $E =  200000 \rm{N/mm^2}$
+
+Elkülönített ábra:
+
+</td><td>
+<object type="image/svg+xml" data="image/3_hazi_1_feladat_1_abra_megoldas.png" 
+style="width:282px;height:185px">Your browser does not support SVG</object>
+</table></tr></td>
+
+A szerkezet magassága Pitagorasz-tételből:
+
+$$f_\rm{0}=\sqrt { { L_\rm{0} }^{ 2 }-{ l }^{ 2 } }= `r signif(f_0, 2)` \rm{m}$$
+
+A kötélerő és az $F$ erő egyensúlyban vannak, így a $K_\rm{0}$ kötélerő hasonló háromszögekből:
+$$K_\rm{0}=\frac { F }{ 2 } \times \frac { L_\rm{0} }{ f_\rm{0} }= `r signif(K_0, 2)` \rm{kN} \quad \rm{(0.1 pont)}$$
+
+A kötélben fellépő feszültség: 
+$$\sigma_\rm{0}=\frac { K_\rm{0}\times 1000  }{ A }=`r signif(sigma_0,3)`\rm{\frac { N }{ { mm }^{ 2 }}} \quad .$$
+
+Az összenyomódás:
+$$\epsilon_\rm{0}=\frac { \sigma_\rm{0} }{ E } \quad \rm{(0.1 pont)}$$
+
+A rúd hoszváltozása:
+$$\Delta L_\rm{0}=L_\rm{0}\times \varepsilon_\rm{0}= `r signif(deltaL_0, 3)` \rm{m}$$
+
+A test elmozdult helyzete Pitagorasz-tételből:
+$$f_\rm{1}=\sqrt{ { \left( L_\rm{0}-\Delta L_\rm{0} \right)  }^{ 2 }-{ l }^{ 2 } }= `r signif(f_1, 3)` \rm{m}$$
+
+Vagyis a test függőleges elmozdulása:
+$$w_\rm{1}=f_\rm{1}-f_\rm{0}= `r signif(w_1, 3)` \rm{m} \quad \rm{(0.1 pont)}$$
+
+
+***
+
+__b) Részfeladat__
+
+A test elmozdult helyzete Pitagorasz-tételből az előzőekben számítottak alapján:
+$$f_\rm{1}=\sqrt{ { \left( L_\rm{0}-\Delta L_\rm{0} \right)  }^{ 2 }-{ l }^{ 2 } }= `r signif(f_1, 3)` \rm{m}$$
+
+Az előző számítást folytatva további iterációs lépésekkel:
+
+$$L_\rm{1}= L_\rm{0}-\Delta L_\rm{0}= `r signif(L_1, 3)` \rm{m}$$
+
+A kötélerő és az $F$ erő egyensúlyban vannak, így a $K_\rm{0}$ kötélerő hasonló háromszögekből:
+$$K_\rm{1}=\frac { F }{ 2 } \times \frac { L_\rm{1} }{ f_\rm{1} }= `r signif(K_1, 2)` \rm{kN} $$
+
+A kötélben fellépő feszültség: 
+$$\sigma_\rm{1}=\frac { K_\rm{1}\times 1000  }{ A }=`r signif(sigma_1,3)`\rm{\frac { N }{ { mm }^{ 2 }}} \quad .$$
+
+Az összenyomódás:
+$$\epsilon_\rm{1}=\frac { \sigma_\rm{1} }{ E } $$
+
+A rúd hoszváltozása:
+$$\Delta L_\rm{1}=L_\rm{1}\times \varepsilon_\rm{1}= `r signif(deltaL_1, 3)` \rm{m}$$
+
+A test elmozdult helyzete Pitagorasz-tételből:
+$$f_\rm{2}=\sqrt{ { \left( L_\rm{1}-\Delta L_\rm{1} \right)  }^{ 2 }-{ l }^{ 2 } }= `r signif(f_2, 3)` \rm{m}$$
+
+Vagyis a test függőleges elmozdulása:
+$$w_\rm{2}=f_\rm{2}-f_\rm{1}= `r signif(w_2, 3)` \rm{m}$$
+
+
+Az előző számítást folytatva további iterációs lépésekkel:
+
+$$L_\rm{2}= L_\rm{1}-\Delta L_\rm{1}= `r signif(L_2, 3)` \rm{m}$$
+
+A kötélerő és az $F$ erő egyensúlyban vannak, így a $K_\rm{0}$ kötélerő hasonló háromszögekből:
+$$K_\rm{2}=\frac { F }{ 2 } \times \frac { L_\rm{2} }{ f_\rm{2} }= `r signif(K_2, 2)` \rm{kN} $$
+
+A kötélben fellépő feszültség: 
+$$\sigma_\rm{2}=\frac { K_\rm{2}\times 1000  }{ A }=`r signif(sigma_2,3)`\rm{\frac { N }{ { mm }^{ 2 }}} .$$
+
+Az összenyomódás:
+$$\epsilon_\rm{2}=\frac { \sigma_\rm{2} }{ E } $$
+
+A rúd hoszváltozása:
+$$\Delta L_\rm{2}=L_\rm{2}\times \varepsilon_\rm{2}= `r signif(deltaL_2, 3)` \rm{m}$$
+
+A test elmozdult helyzete Pitagorasz-tételből:
+$$f_\rm{3}=\sqrt{ { \left( L_\rm{2}-\Delta L_\rm{2} \right)  }^{ 2 }-{ l }^{ 2 } }= `r signif(f_3, 3)` \rm{m}$$
+
+Vagyis a test függőleges elmozdulása:
+$$w_\rm{3}=f_\rm{3}-f_\rm{2}= `r signif(w_3, 3)` \rm{m} $$
+
+
+Az előző számítást folytatva további iterációs lépésekkel:
+
+$$L_\rm{3}= L_\rm{2}-\Delta L_\rm{2}= `r signif(L_3, 3)` \rm{m}$$
+
+A kötélerő és az $F$ erő egyensúlyban vannak, így a $K_\rm{0}$ kötélerő hasonló háromszögekből:
+$$K_\rm{3}=\frac { F }{ 2 } \times \frac { L_\rm{3} }{ f_\rm{3} }= `r signif(K_3, 2)` \rm{kN} \quad \rm{(0.1 pont)}$$
+
+A kötélben fellépő feszültség: 
+$$\sigma_\rm{3}=\frac { K_\rm{3}\times 1000  }{ A }=`r signif(sigma_3,3)`\rm{\frac { N }{ { mm }^{ 2 }}} \quad .$$
+
+Az összenyomódás:
+$$\epsilon_\rm{3}=\frac { \sigma_\rm{3} }{ E } \quad \rm{(0.1 pont)}$$
+
+A rúd hoszváltozása:
+$$\Delta L_\rm{3}=L_\rm{3}\times \varepsilon_\rm{3}= `r signif(deltaL_3, 3)` \rm{m}$$
+
+A test elmozdult helyzete Pitagorasz-tételből:
+$$f_\rm{4}=\sqrt{ { \left( L_\rm{3}-\Delta L_\rm{3} \right)  }^{ 2 }-{ l }^{ 2 } }= `r signif(f_4, 3)` \rm{m}$$
+
+Vagyis a test függőleges elmozdulása:
+$$w_\rm{4}=f_\rm{4}-f_\rm{3}= `r signif(w_4, 3)` \rm{m} \quad \rm{(0.1 pont)}$$

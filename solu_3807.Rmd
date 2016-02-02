@@ -1,0 +1,40 @@
+---
+title: "Tartószerkezetek méretezésének alapjai <br> 3. Házi feladat megoldásai"
+runtime: shiny
+date: "`r Sys.Date()`"
+output:
+  html_document:
+    theme: readable
+#    includes:
+#      in_header: include/in_header.html
+#      before_body: include/before_body.html
+#      after_body: include/after_body.html
+#    css: include/style.css
+---
+
+
+<!--
+TODO:
+* render -> wasteful -> generate only *md
+* render -> temporary files, conflict between session? remaining temporary folders?
+
+NOTES:
+* 
+-->
+
+***
+
+_Feladatkiírás a bemenő adatokkal <a href="index.Rmd" target="_blank">itt érhető el</a>._
+
+***
+
+### Info
+* A Neptun kód megadását és "Működj" gomb megnyomását követően jelennek meg az egyedi paraméterekhez tartozó megoldások.
+* (_PROBA1 és PROBA2 neptun kódokkal tesztelhető_)
+* Ha a neptun kódja nem szerepel a rendszerben értesítse a gyakorlatvezetőjét!
+
+```{r, echo=FALSE}
+# TODO: automatically adjust height
+shinyAppDir("R/solu", options = list(height = "3500px"))
+```
+

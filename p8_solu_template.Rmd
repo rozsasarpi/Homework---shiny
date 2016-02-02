@@ -1,0 +1,94 @@
+---
+title: "Tartószerkezetek méretezésének alapjai - 3. házi"
+params:
+  stud_neptun: PROBA1
+output:
+  html_document:
+    theme: readable
+#    css: include/style.css
+#    includes:
+#      after_body: include/after_body.html
+#      before_body: include/before_body.html
+#      in_header: include/in_header.html
+---
+
+<!--
+TODO:
+* 
+
+NOTES:
+* 
+-->
+
+***
+
+
+```{r, echo=FALSE}
+library(dplyr, warn.conflicts = F)
+source("R/get_compound_par.R")
+
+load(file = "data/input_data.RData")
+
+student_neptun   = params$stud_neptun ## WARNING!
+
+input_data       = filter(input_data, Neptun == student_neptun)
+
+compound         = get_compound_par(input_data)
+comp_input_names = compound$names
+comp_input_data  = compound$data
+
+```
+
+Neptun: `r params$stud_neptun`
+
+***
+
+### 8. Feladat
+
+Egy gömbsüveg alakú fújt sátor alaprajzának sugara $R$, a gömb sugara $\rho$ , a falvastagság $t$, az anyagának szilárdsága $f$. Megfelel-e a sátor fala, ha a belső túlnyomás $p$?
+
+<table><tr><td>
+<div style="width:300px; height=200px">
+![alt text](image/3_hazi_8_feladat_1_abra_kiiras.png "forrás: http://www.graboplan.hu/hun/kepv.php?sid=&id=&pid=374")
+</div>
+
+</td><td>
+<object type="image/svg+xml" data="image/3_hazi_8_feladat_2_abra_kiiras.png" 
+style="width:286px;height:164px">Your browser does not support SVG</object>
+</table></tr></td>
+
+***
+
+```{r, echo=FALSE}
+R   = comp_input_data$p8__R
+varrho = comp_input_data$p8__varrho
+t = comp_input_data$p8__t
+f = comp_input_data$p8__f
+p = comp_input_data$p8__p
+
+sigma=p*rho/(2*t*1000)
+
+
+```
+
+Kiindulási adatok:
+
+* $R =  `r R` \rm{m}$
+* $varrho  =  `r varrho` \rm{m}$
+* $t =  `r t` \rm{mm}$
+* $f =  `r f` \rm{N/mm^2}$
+* $p =  `r p` \rm{N/m^2}$
+
+Megoldás:
+
+</td><td>
+<object type="image/svg+xml" data="image/3_hazi_9_feladat_1_abra_megoldas.png" 
+style="width:270px;height:152px">Your browser does not support SVG</object>
+</table></tr></td>
+
+A sátor falában keletkező (húzó) feszültség a kazánképletből:
+
+$$\sigma =\frac { p\times \varrho  }{ 2\times t \times 1000}=`r signif(sigma,3)`\rm{\frac { kN }{ { mm }^{ 2 }}}. \quad \rm{(0.2 pont)}$$
+
+Amennyiben ez kisebb, mint a sátor anyagának húzószilárdsága (f), akkor a sátor fala megfelel.
+

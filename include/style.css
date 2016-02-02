@@ -1,0 +1,26 @@
+/* to avoid the navigation bar */
+body { 
+	padding-top: 50px;
+}
+
+/* center the title 
+#header {
+  text-align: center;
+}
+*/
+
+/* position bootstrap navbar */
+.navbar .navbar-nav  {
+  display: inline-block;
+  float: none;
+  vertical-align: top;
+}
+
+.navbar .navbar-collapse {
+  text-align: 100px;
+}
+
+/* not working.. */
+.navbar-brand {
+  text-align: center;
+}

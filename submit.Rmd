@@ -1,0 +1,53 @@
+---
+title: "Basis of Structural Design <br> Submission of Homework 3"
+runtime: shiny
+date: "`r Sys.Date()`"
+output:
+  html_document:
+    theme: readable
+    toc: false
+    toc_depth: 3
+#    includes:
+#      in_header: include/in_header.html
+#      before_body: include/before_body.html
+#      after_body: include/after_body.html
+#    css: include/style.css
+---
+
+<!--
+TODO:
+* correct 'neptun' vs 'Neptun'
+
+NOTES:
+* to differentiate between input variables with the same name for different problems the following naming convention is used
+for input$ parameters:
+
+    'p1.F' where 'p1' is refering to problem number and 'F' to variable, '.' is the separator
+
+This is used for submit_data.RData as well. Should be harmonized with input_data!!
+-->
+
+***
+
+_Homework with input data can be reached [here](index.Rmd)._
+
+_Deadline: 20/11/2015, Fri 12:00_
+
+_Points are obtained provided that the hand-written solution has been submitted AND the results have been successfully uploaded._
+
+***
+
+### Info
+* Incomplete solutions can also be submitted and will be valuated.
+* Use the __Submit__ button at the end of this page to upload results.
+* Each submission overwrites the previous submission. Valuation is based on the last submission.
+* __Maximum +/- 1% deviation__ from the exact solution will be accepted (green coloured).
+
+
+```{r, echo=FALSE}
+# only the authentication token should be replaced for a different homework/subject 
+# otherwise it generates the submission site automatically
+# TODO: automatically adjust height
+shinyAppDir("R/submit", options = list(height = "3500px"))
+```
+

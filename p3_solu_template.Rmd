@@ -1,0 +1,197 @@
+---
+title: "Tartószerkezetek méretezésének alapjai - 3. házi"
+params:
+  stud_neptun: PROBA1
+output:
+  html_document:
+    keep_md: yes
+    self_contained: no
+    theme: readable
+#    css: include/style.css
+#    includes:
+#      after_body: include/after_body.html
+#      before_body: include/before_body.html
+#      in_header: include/in_header.html
+---
+
+<!--
+TODO:
+* 
+
+NOTES:
+* 
+-->
+
+***
+
+
+```{r, echo=FALSE}
+library(dplyr, warn.conflicts = F)
+source("R/get_compound_par.R")
+
+load(file = "data/input_data.RData")
+
+student_neptun   = params$stud_neptun ## WARNING!
+
+input_data       = filter(input_data, Neptun == student_neptun)
+
+compound         = get_compound_par(input_data)
+comp_input_names = compound$names
+comp_input_data  = compound$data
+
+```
+
+Neptun: `r params$stud_neptun`
+
+***
+
+### 3. Feladat
+
+Egy $h$ m mély munkagödröt levert (konzolos) I tartók közé elhelyezett pallózással biztosítanak. A földnyomás $p_\rm{1}$ - $p_\rm{2}$ $kN/m^\rm{2}$-ig változik lineárisan a magasság mentén. Az I keresztmetszet méretei: övek 100×5 mm, a gerinc 140×5 mm, az acél szilárdsága $f = 200 N/mm^\rm{2}$ , a nyírószilárdság pedig $90 N/mm^\rm{2}$ . Az I tartók egymástól mért távolsága $y$ m. 
+
+(a) Megfelel-e az I tartó befogási keresztmetszete hajlításra? 
+(b) Megfelel-e az I tartó befogási keresztmetszete nyírásra? 
+(c) Mekkora az I tartók lehetséges legnagyobb egymástól mért távolsága?  (A feszültségeket közelítően számítsa!)
+
+<table><tr><td>
+<div style="width:550px; height=423px">
+![alt text](image/3_hazi_3_feladat_1_abra_kiiras.png "forrás: http://www.tankonyvtar.hu/hu/tartalom/tamop425/0033_SCORM_MFKHT6504SI/sco_11_02.htm")
+</div>
+
+</td><td>
+<object type="image/svg+xml" data="image/3_hazi_3_feladat_2_abra_kiiras.png" 
+style="width:365px;height:369px">Your browser does not support SVG</object>
+</table></tr></td>
+
+***
+
+__a) Részfeladat__
+
+```{r, echo=FALSE}
+  h = comp_input_data$p3__h
+  p_1 = comp_input_data$p3__p_1
+  p_2 = comp_input_data$p3__p_2
+  y = comp_input_data$p3__y
+
+  f=200
+  f_tau=90
+  A=2*100*5+140*5
+  A_w=140*5
+  A_f=100*5
+  I=(100*150^3-95*140^3)/12
+  
+  M_fajl1=3*p_1*h^2/6
+  M_fajl2=(p_2-p_1)*h^2/6
+  M_fajl=M_fajl1+M_fajl2
+  M=M_fajl*y
+  z=0.145
+  N=M/z
+  sigma=N/A_f
+  
+  V_fajl=(p_1+p_2)*h/2
+  V=V_fajl*y
+  tau=V/A_w
+  
+  sigma_max=f
+  y_max1=f*z*A_f/M_fajl
+  
+  tau_max=f_tau
+  y_max2=f_tau*A_w/V_fajl
+  
+```
+
+Kiindulási adatok:
+
+* $h =  `r h` \rm{m}$
+* $p_1 =  `r p_1` \rm{kN/m^2}$
+* $p_2 =  `r p_2` \rm{kN/m^2}$
+* $y =  `r y` \rm{m}$
+* $f =  200 \rm{N/mm^2}$
+* $f_\tau =  90 \rm{N/mm^2}$
+* $z =  0.145 \rm{m}$
+
+Az I tartó statikai váza egy változó intenzitású, trapéz alakban megoszló terhelésű befogott konzol, melynek maximális nyomatéka az I tartó befogási keresztmetszetében keletkezik. Így ennek a keresztmetszetnek a nyomatékát számítjuk a megoszló teherből.
+
+</td><td>
+<object type="image/svg+xml" data="image/3_hazi_3_feladat_1_abra_megoldas.png" 
+style="width:263px;height:300px">Your browser does not support SVG</object>
+</table></tr></td>
+
+A megoszló terhet egy egyenletes megoszlóra és egy változó intenzitású, háromszög alakban megoszló terhelésre felbontva számítjuk a fajlagos nyomatékokat:
+
+$$M_\rm{fajl1}=\frac { p_\rm{1}\times { h }^{ 2 } }{ 2 }=`r signif(M_fajl1,4)` \rm{\frac { kNm }{ m }}$$
+
+$$M_\rm{fajl2}=\frac { (p_\rm{2}-p_\rm{1})\times { h }^{ 2 } }{ 6 } =`r signif(M_fajl2,4)` \rm{\frac { kNm }{ m }}$$
+
+$$M_\rm{fajl}=M_\rm{fajl1} + M_\rm{fajl2} = \frac { (2\times p_\rm{1}+p_\rm{2})\times { h }^{ 2 } }{ 6 } =`r signif(M_fajl,4)` \rm{\frac { kNm }{ m }}.$$
+
+A nyomatékot egy teljes terhelési mezőre számítjuk, amelynek szélessége y (az I-tartók tengelytávolsága):
+
+$$M= M_\rm{fajl}\times y =`r signif(M,4)` \rm{ kNm }.\quad \rm{(0.1 pont)}$$
+
+</td><td>
+<object type="image/svg+xml" data="image/3_hazi_3_feladat_2_abra_megoldas.png" 
+style="width:400px;height:400px">Your browser does not support SVG</object>
+</table></tr></td>
+
+A belső erők karja, azaz az övek egymástól mért távolsága z = 140 + 5 = 145 mm = 0.145 m , így az övekben ébredő húzó- és nyomóerő:
+
+$$N=\frac { M }{ z }= `r signif(N,4)` \rm{ kN }.$$
+
+</td><td>
+<object type="image/svg+xml" data="image/3_hazi_3_feladat_3_abra_megoldas.png" 
+style="width:416px;height:138px">Your browser does not support SVG</object>
+</table></tr></td>
+
+
+Az övek keresztmetszeti területe:
+
+$$A_f= 100\times 5 = `r signif(A_f,3)`\rm{ { mm }^{ 2 }}.$$
+
+A normálfeszültség:
+
+$$\sigma=\frac { N }{ A_\rm{f} }=`r signif(sigma*1000,3)`\rm{\frac { N }{ { mm }^{ 2 }}}. \quad \rm{(0.1 pont)}$$
+
+Amennyiben ez kisebb, mint az acél szilárdsága ( $f = 200 N/mm^\rm{2}$ ), akkor normálfeszültségekre a keresztmetszet megfelel.
+
+__b) Részfeladat__
+
+A nyíróerő szintén ebben a keresztmetszetben a legnagyobb, ahol az y szélességű terhelési mezőből származó reakciót viselnie kell a keresztmetszetnek. A teljes rekacióerő:
+
+$$V=\frac { \left( p_\rm{1}+p_\rm{2} \right) \times h \times y }{ 2 }= `r signif(V,4)` \rm{ kN }.\quad \rm{(0.1 pont)}$$
+
+A gerinc keresztmetszeti területe:
+$$A_w= 140\times 5 = `r signif(A_w,3)`\rm{ { mm }^{ 2 }}.$$ 
+
+A nyírófeszültség:
+
+$$\tau=\frac { V }{ A_\rm{w} }=`r signif(tau*1000,3)`\rm{\frac { N }{ { mm }^{ 2 }}}. \quad \rm{(0.1 pont)}$$
+
+</td><td>
+<object type="image/svg+xml" data="image/3_hazi_3_feladat_4_abra_megoldas.png" 
+style="width:366px;height:155px">Your browser does not support SVG</object>
+</table></tr></td>
+
+Amennyiben ez kisebb, mint az acél nyírószilárdsága ( $90 N/mm^\rm{2}$ ), akkor nyírófeszültségekre a keresztmetszet megfelel.
+
+
+__c) Részfeladat__
+
+Addig növelhető az I-tartók közötti távolság, hogy a kérdéses keresztmetszetünkben (befogási keresztmetszet) a nyomó-, vagy nyírófeszültség értéke még éppen nem éri el a nyomó- vagy nyírószilárdság értékét.
+Ezekből a feltételekből indulunk ki, vagyis mindkét esetre kiszámítjuk az alkalmazható legnagyobb távolságot, és a kettő közül a kisebb lesz a mértkéadó.
+
+Az első feltétel (mekkora távolságnál érjük el a legnagyobb nyomófeszültséget, amely esetén a keresztmetszetben keletkező nyomófeszültség még nem éri el a nyomószilárdság értékét):
+
+$$\sigma_\rm{max}= f =`r signif(sigma_max,3)`\rm{\frac { N }{ { mm }^{ 2 }}}.$$
+
+$$y_\rm{max1}=\frac { f\times z\times A_\rm{f} }{ M_\rm{fajl} }= `r signif(y_max1/1000,4)` \rm{ m }.\quad \rm{(0.1 pont)} $$
+
+A második feltétel (mekkora távolságnál érjük el a legnagyobb nyírófeszültséget, amely esetén a keresztmetszetben keletkező nyírófeszültség még nem éri el a nyírószilárdság értékét):
+
+$$\tau_\rm{max}= f_\rm{\tau} =`r signif(tau_max,3)`\rm{\frac { N }{ { mm }^{ 2 }}}.$$
+
+$$y_\rm{max2}=\frac { f_\rm{\tau}\times 2\times A_\rm{w} }{ h\times \left( p_\rm{1}+p_\rm{2} \right) } =`r signif(y_max2/1000,3)`\rm{ m }. \quad \rm{(0.1 pont)}$$
+  
+A két kapott $y_\rm{max1}$ és $y_\rm{max1}$ távolság közül a kisebb a mértékadó, ez adja meg az I-tartók maximális távolságát.
+
+

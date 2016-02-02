@@ -1,0 +1,105 @@
+---
+title: "Tartószerkezetek méretezésének alapjai - 3. házi"
+params:
+  stud_neptun: PROBA1
+output:
+  html_document:
+    theme: readable
+#    css: include/style.css
+#    includes:
+#      after_body: include/after_body.html
+#      before_body: include/before_body.html
+#      in_header: include/in_header.html
+---
+
+<!--
+TODO:
+* 
+
+NOTES:
+* 
+-->
+
+***
+
+
+```{r, echo=FALSE}
+library(dplyr, warn.conflicts = F)
+source("R/get_compound_par.R")
+
+load(file = "data/input_data.RData")
+
+student_neptun   = params$stud_neptun ## WARNING!
+
+input_data       = filter(input_data, Neptun == student_neptun)
+
+compound         = get_compound_par(input_data)
+comp_input_names = compound$names
+comp_input_data  = compound$data
+
+```
+
+Neptun: `r params$stud_neptun`
+
+***
+
+### 6. Feladat
+
+Határozza meg az előző feladatban látható épület egyes merevítő elemeire ható terhek nagyságát, ha a szélteher iránya az ábrán jelöltre merőleges és nagysága $Q$! Adja meg, hogy az 1. fal alján milyen reakciókat kell egyensúlyozni!
+
+***
+
+```{r, echo=FALSE}
+
+Q = comp_input_data$p6__Q
+l = comp_input_data$p5__l
+a = comp_input_data$p5__a
+d = comp_input_data$p5__d
+h = comp_input_data$p5__h
+
+F_1=Q*d/(2*(l-a))
+F_2=F_1
+F_3=Q
+M_1=F_1*h
+
+```
+
+Kiindulási adatok:
+
+* $Q =  `r Q` \rm{kN}$
+* $l =  `r l` \rm{m}$
+* $a =  `r a` \rm{m}$
+* $d =  `r d` \rm{m}$
+* $h =  `r h` \rm{m}$
+
+Megoldás:
+
+A födémre ható szélteher eredője adott ($Q$), ezt a szélterhet 3 merevítés egyensúlyozza. Nyomatéki egyenlet az $F_\rm{1}$ és $F_\rm{2}$ erők metszéspontjára:
+
+$$Q\times \frac { d }{ 2 } - F_\rm{1}\times \left( l-a \right)=0$$   
+
+$$F_\rm{1}=\frac { Q\times d }{ 2\times \left( l-a \right)  } = `r signif(F_1,4)` \rm{ kN }.\quad \rm{(0.1 pont)}$$
+
+
+Vetületi egyenlet x irányban:
+
+$$F_\rm{2}= F_\rm{1} = `r signif(F_2,4)` \rm{ kN }.\quad \rm{(0.1 pont)}$$
+
+
+Vetületi egyenlet y irányban:
+
+$$F_\rm{3}= Q .\quad \rm{(0.1 pont)}$$
+
+Ezzel meghatároztuk a szélteherből az egyes merevítésekre jutó erőket, amelyeket az alábbi ábrába is berajzoltunk.
+
+</td><td>
+<object type="image/svg+xml" data="image/3_hazi_6_feladat_1_abra_megoldas.png" 
+style="width:224px;height:323px">Your browser does not support SVG</object>
+</table></tr></td>
+
+A merevítésre ható erőt a merevítés alján az alapozásnál tudjuk egyensúlyozni: egy vízszintes erővel és egy
+nyomatékkal. Az egyes számú merevítésnél a nyomaték (mivel az épület magassága h):
+
+$$M_\rm{1}= F_\rm{1}\times h =`r signif(M_1,4)` \rm{kNm}.\quad \rm{(0.1 pont)}$$
+
+

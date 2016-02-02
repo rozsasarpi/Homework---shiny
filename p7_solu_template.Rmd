@@ -1,0 +1,76 @@
+---
+title: "Tartószerkezetek méretezésének alapjai - 3. házi"
+params:
+  stud_neptun: PROBA1
+output:
+  html_document:
+    theme: readable
+#    css: include/style.css
+#    includes:
+#      after_body: include/after_body.html
+#      before_body: include/before_body.html
+#      in_header: include/in_header.html
+---
+
+<!--
+TODO:
+* 
+
+NOTES:
+* 
+-->
+
+***
+
+
+```{r, echo=FALSE}
+library(dplyr, warn.conflicts = F)
+source("R/get_compound_par.R")
+
+load(file = "data/input_data.RData")
+
+student_neptun   = params$stud_neptun ## WARNING!
+
+input_data       = filter(input_data, Neptun == student_neptun)
+
+compound         = get_compound_par(input_data)
+comp_input_names = compound$names
+comp_input_data  = compound$data
+
+```
+
+Neptun: `r params$stud_neptun`
+
+***
+
+### 7. Feladat
+
+Megengedhető-e az alábbi merevítőrendszer-elrendezés?
+
+<object type="image/svg+xml" data="image/3_hazi_7_feladat_1_abra_kiiras.png" 
+style="width:670px;height:137px">Your browser does not support SVG</object>
+
+***
+
+```{r, echo=FALSE}
+
+
+```
+
+
+Megoldás:
+
+A merevítések mint megtámasztó kényszerek működnek a födémtárcsára. Mivel csak a síkjukban tudnak erőt felvenni, ezért a födémtárcsa szempontjából úgy működnek, mint a megtámasztó rudak. Ezért az ott megfogalmazott megtámasztási elvek közvetlenül használhatók mint a merevítések elhelyezési szabályai.
+Ennek megfelelően, ha egy szerkezetet síkbeli, függőleges síkú merevítésekkel merevítünk, akkor:
+· legalább 3 merevítést kell alkalmazni és
+· a merevítések alaprajzi vetületére fektetett egyenesek legalább két pontban kell, hogy messék egymást.
+
+A második feltételnek nem felel meg: (a) (d) (f) kialakítás, így ezek nem megfelelőek.
+
+Szerencsétlen a (c) ábrán vázolt eset is, mert ha a szélteher nem szimmetrikusan működik, akkor a közel elhelyezett falak a csavarásnak kicsiny ellenállást mutatnak.
+
+A (b) hagyományosan elfogadott kialakítás. (0.1 pont)
+
+Az (e) elrendezésnél 3 merevítőfal hatásvonala 1 pontban találkozik, de az ezekre merőleges merevítések alkalmazása miatt az elrendezés megfelelő. (0.1 pont)
+
+
